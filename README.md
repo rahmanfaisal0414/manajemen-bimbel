@@ -2,7 +2,7 @@
 
 Ini adalah frontend dari aplikasi **Manajemen Bimbel** yang dibuat menggunakan Next.js + Tailwind CSS.
 
-🎯 **Fitur utama**:
+🎯 **Fitur**:
 - Autentikasi (Sign In, Sign Up)
 - Lupa password + OTP + Reset password
 - Manajemen UI untuk siswa, tutor, admin (masih dalam proses)
