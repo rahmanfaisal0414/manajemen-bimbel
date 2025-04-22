@@ -14,4 +14,4 @@ Ini adalah frontend dari aplikasi **Manajemen Bimbel** yang dibuat menggunakan N
 
 ## Link Backend Manajemen Bimbel
 
-- [Backend](https://github.com/rahmanfaisal0414/backend_bimbel).a
+- [Backend](https://github.com/rahmanfaisal0414/backend_bimbel).
