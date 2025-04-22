@@ -1,23 +1,41 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter hook
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast';
+import { Eye, EyeOff } from 'lucide-react';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter(); // Initialize the useRouter hook
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Example check, you can replace this with an actual authentication logic
-    if (username === 'admin' && password === 'password') {
-      // Redirect to the dashboard if the credentials are correct
-      router.push('/admin');
+    const res = await fetch('http://localhost:8000/api/auth/signin/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        identifier: username,
+        password: password,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success('🎉 Login berhasil, selamat datang!');
+      localStorage.setItem('user', JSON.stringify(data));
+      setTimeout(() => {
+        router.push('/admin');
+      }, 2000);
     } else {
-      alert('Invalid username or password');
+      toast.error(data.error || '❌ Gagal login. Periksa kembali input kamu!');
     }
   };
 
@@ -48,14 +66,23 @@ const SignIn = () => {
 
             <div>
               <label className="block text-sm text-gray-800 font-medium">Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full mt-2 p-4 border border-gray-300 text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full mt-2 p-4 pr-12 border border-gray-300 text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <div className="flex justify-between items-center mt-4">
