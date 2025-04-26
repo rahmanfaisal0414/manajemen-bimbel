@@ -29,5 +29,13 @@ Ikuti langkah berikut untuk menjalankan project ini secara lokal:
 
 ```bash
 git clone https://github.com/rahmanfaisal0414/manajemen-bimbel.git
+```
+### 2. Masuk ke Direktori Project
 
-### 1. Clone Repository
+Setelah cloning selesai, masuk ke folder project:
+
+```bash
+cd manajemen-bimbel
+```
+
+
