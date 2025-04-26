@@ -37,5 +37,34 @@ Setelah cloning selesai, masuk ke folder project:
 ```bash
 cd manajemen-bimbel
 ```
+### 3. Install Dependencies
 
+Install semua library dan package yang dibutuhkan:
+
+```bash
+npm install
+```
+
+### 4. Setup Environment Variables
+
+Buat file baru .env.local di dalam root project. Isi dengan konfigurasi berikut:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
+NEXT_PUBLIC_APP_NAME=Manajemen Bimbel
+```
+
+Catatan:
+
+Pastikan backend (API Django) sudah aktif di localhost:8000.
+
+Jika backend berjalan di port atau URL lain, sesuaikan NEXT_PUBLIC_API_URL di .env.local.
+
+### 5. Jalankan Development Server
+
+Untuk menjalankan server development:
+
+```bash
+npm run dev
+```
 
