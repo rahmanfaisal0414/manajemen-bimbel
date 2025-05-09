@@ -15,27 +15,42 @@ const SignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:8000/api/auth/signin/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        identifier: username,
-        password: password,
-      }),
-    });
+    try {
+      const res = await fetch('http://localhost:8000/api/auth/signin/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: username,
+          password: password,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      toast.success('🎉 Login berhasil, selamat datang!');
-      localStorage.setItem('user', JSON.stringify(data));
-      setTimeout(() => {
-        router.push('/admin');
-      }, 2000);
-    } else {
-      toast.error(data.error || '❌ Gagal login. Periksa kembali input kamu!');
+      if (res.ok) {
+        toast.success('🎉 Login berhasil, selamat datang!');
+
+        // Simpan user info ke localStorage
+        localStorage.setItem('user', JSON.stringify(data));
+
+        // Redirect berdasarkan role
+        if (data.role === 'admin') {
+          router.push('/admin');
+        } else if (data.role === 'tutor') {
+          router.push('/tutor');
+        } else if (data.role === 'student') {
+          router.push('/student');
+        } else {
+          router.push('/'); // fallback kalau role tidak dikenal
+        }
+      } else {
+        toast.error(data.error || '❌ Gagal login. Cek username atau password kamu!');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('❌ Terjadi kesalahan saat login.');
     }
   };
 
@@ -52,6 +67,7 @@ const SignIn = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-6">
+            {/* Username / Email Input */}
             <div>
               <label className="block text-sm text-gray-800 font-medium">Username or Email</label>
               <input
@@ -64,6 +80,7 @@ const SignIn = () => {
               />
             </div>
 
+            {/* Password Input */}
             <div>
               <label className="block text-sm text-gray-800 font-medium">Password</label>
               <div className="relative">
@@ -85,16 +102,22 @@ const SignIn = () => {
               </div>
             </div>
 
+            {/* Forgot Password Link */}
             <div className="flex justify-between items-center mt-4">
               <Link href="/auth/f_password" className="text-purple-600 text-sm hover:text-purple-700">
                 Forgot your password?
               </Link>
             </div>
 
-            <button type="submit" className="w-full bg-purple-600 text-white py-3 rounded-lg mt-6 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-purple-600 text-white py-3 rounded-lg mt-6 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
               Sign In
             </button>
 
+            {/* Link to Sign Up */}
             <p className="mt-6 text-center text-gray-600">
               Don't have an account?{' '}
               <Link href="/auth/signup" className="text-purple-600 hover:text-purple-700">
@@ -105,7 +128,7 @@ const SignIn = () => {
         </form>
       </div>
 
-      {/* Ilustrasi */}
+      {/* Illustration */}
       <div className="hidden md:flex w-1/2 bg-gradient-to-b from-[#C949E5] to-white flex items-center justify-center">
         <img
           src="/login-image.png"

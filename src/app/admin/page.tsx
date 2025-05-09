@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 type StatItem = { label: string; value: number | string };
 type ScheduleItem = { subject: string; status: string; tutor: string; time: string };
@@ -35,18 +36,38 @@ const AdminHomeContent = () => {
     <div className="space-y-10 mt-6 font-[Poppins]">
       {/* Statistic Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {stats.map((item, idx) => (
-          <div
-            key={idx}
-            className="border border-gray-200 rounded-xl px-5 py-6 text-center shadow-sm hover:shadow-md transition"
-          >
-            <p className="text-xs text-gray-500 font-semibold">{item.label}</p>
-            <h2 className="text-4xl font-bold text-[#C949E5] my-2">{item.value}</h2>
-            <button className="text-xs text-[#C949E5] font-medium hover:underline transition">
-              See All →
-            </button>
-          </div>
-        ))}
+        {stats.map((item, idx) => {
+          const isNavigable = item.label === 'Total Student' || item.label === 'Total Tutor';
+          const linkHref =
+            item.label === 'Total Student'
+              ? '/admin/student-management'
+              : item.label === 'Total Tutor'
+              ? '/admin/tutor-management'
+              : '#';
+
+          return (
+            <div
+              key={idx}
+              className="border border-gray-200 rounded-xl px-5 py-6 text-center shadow-sm hover:shadow-md transition"
+            >
+              <p className="text-xs text-gray-500 font-semibold">{item.label}</p>
+              <h2 className="text-4xl font-bold text-[#C949E5] my-2">{item.value}</h2>
+
+              {isNavigable ? (
+                <Link
+                  href={linkHref}
+                  className="text-xs text-[#C949E5] font-medium hover:underline transition inline-block"
+                >
+                  See All →
+                </Link>
+              ) : (
+                <button className="text-xs text-[#C949E5] font-medium hover:underline transition">
+                  See All →
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Schedule Section */}
@@ -87,14 +108,19 @@ const AdminHomeContent = () => {
 
       {/* Action Buttons */}
       <div className="flex justify-end gap-4 mt-4">
-        {['Student', 'Tutor', 'Class'].map((type) => (
-          <button
-            key={type}
-            className="bg-[#C949E5] text-white rounded-lg px-4 py-3 flex items-center gap-2 shadow-md hover:bg-[#a837c5] transition"
-          >
-            <span className="text-xl font-bold">+</span>
-            <span className="text-sm font-medium">Add {type}</span>
-          </button>
+        {[
+          { label: "Student", href: "/admin/student-management/add" },
+          { label: "Tutor", href: "/admin/tutor-management/add" },
+          { label: "Class", href: "/admin/class-management/add" },
+        ].map(({ label, href }) => (
+          <Link href={href} key={label}>
+            <button
+              className="bg-[#C949E5] text-white rounded-lg px-4 py-3 flex items-center gap-2 shadow-md hover:bg-[#a837c5] transition"
+            >
+              <span className="text-xl font-bold">+</span>
+              <span className="text-sm font-medium">Add {label}</span>
+            </button>
+          </Link>
         ))}
       </div>
     </div>
